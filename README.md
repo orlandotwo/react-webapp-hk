@@ -7,5 +7,5 @@ Para el desarrollo de esta Web App utilice React - Vite.
 
 ## Ejecicion de Web App
 Para poder ejecutarlo debemos introducir los siguientes comandos:
-    1 yarn
-    2 yarn dev
+    1. yarn
+    2. yarn dev
