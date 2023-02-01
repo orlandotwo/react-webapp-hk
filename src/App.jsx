@@ -10,23 +10,40 @@ import './style.css'
 export function App() {
   const [artistName, setArtistName] = useState('');
   const [albums, setAlbums] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const formSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
+    swal.fire({
+      title: 'Buscando...',
+      text: 'Aguarde un momento',
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      onBeforeOpen: () => {
+        swal.showLoading();
+      }
+    });
     try {
       const response = await axios.get(`${Global.urlArtisAlbums}?artistName=${artistName}`);
-      console.log(response.data)
-      setAlbums(response.data.albums);  
+      console.log(response.data);
+      setAlbums(response.data.albums);
+      swal.close();
+      setLoading(false);
     } catch (error) {
+      swal.close();
+      setLoading(false);
       swal.fire({
         title: 'Error',
         text: error.response.data.msg,
         icon: 'error',
         confirmButtonText: 'OK'
       });
-    }
+    }//finally {
+      
+   // }
   };
-
   return (
     <>
     <Container fluid>
@@ -61,6 +78,7 @@ export function App() {
             </Navbar.Offcanvas>
           </Container>
         </Navbar>
+      
       <Row className='justify-content-center'>
         {albums.map((album) => (
           <Card key={album.id} style={{ width: '18rem', margin: '10px'}} className="album-card">
@@ -69,6 +87,7 @@ export function App() {
               <Card.Title>{album.name}</Card.Title>
               <Card.Subtitle className='text-muted'>{album.artists[0].name}</Card.Subtitle>
               <Card.Subtitle className='text-muted'>{album.release_date}</Card.Subtitle>
+              <Card.Subtitle className='text-muted'>Popularidad {album.popularity}</Card.Subtitle>
             </Card.Body>
           </Card>
         ))}
